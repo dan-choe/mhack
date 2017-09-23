@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mFirebaseAuth.signOut();
 
             // bring the user back to the log in page
-            Intent logInPage = new Intent(this, AuthActivity.class);
+            Intent logInPage = new Intent(this, LogInActivity.class);
             startActivity(logInPage);
         }
         return true;
