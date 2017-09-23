@@ -56,7 +56,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             firebaseLogIn();
         }
         if (v == regButton) {
-            finish();
+            startActivity(new Intent(this, AuthActivity.class));
         }
     }
 
@@ -84,8 +84,8 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         mProgressDialog.dismiss();
                         if (task.isSuccessful()) {
-                            Intent soundVisualization = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(soundVisualization);
+                            Intent dutchPay = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(dutchPay);
                         }
                         else {
                             toastMessage("Invalid Inputs or Need to make an account.");

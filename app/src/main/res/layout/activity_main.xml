@@ -11,18 +11,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Balance"
-        android:layout_marginBottom="37dp"
-        android:layout_above="@+id/access_gallery"
+        android:layout_marginBottom="19dp"
+        android:layout_above="@+id/access_camera"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/access_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:text="Take Photo"
+        android:layout_marginBottom="88dp"
+        android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/add_balance"
-        android:layout_toStartOf="@+id/add_balance"
-        android:text="Take Photo" />
+        android:layout_toStartOf="@+id/add_balance" />
 
     <Button
         android:id="@+id/access_gallery"
@@ -36,12 +37,13 @@
         android:layout_marginLeft="21dp"
         android:layout_marginStart="21dp" />
 
-    <TextView
+    <EditText
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="63dp"
+        android:layout_above="@+id/add_balance"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
         android:text="$0"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:textSize="40sp" />
 </RelativeLayout>

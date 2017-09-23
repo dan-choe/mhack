@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,14 +65,14 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (view == logInButton) {
-            startActivity(new Intent(this, LogInActivity.class));
+            finish();
         }
     }
 
     private void firebaseRegister() {
         final String userName = userIdText.getText().toString();
-        String emailAddress = emailAddressText.getText().toString();
-        String emailPassword = emailPasswordText.getText().toString();
+        final String emailAddress = emailAddressText.getText().toString();
+        final String emailPassword = emailPasswordText.getText().toString();
 
         // check for valid inputs
         if (!checkForValidInputs(emailAddress, emailPassword)) {
@@ -92,12 +93,16 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                             String userId = mFirebaseAuth.getCurrentUser().getUid();
                             DatabaseReference currentUser = mDatabaseReference.child(userId);
-                            currentUser.child("Name").setValue(userName);
+                            currentUser.child("username").setValue(userName);
+                            currentUser.child("email").setValue(emailAddress);
+                            currentUser.child("password").setValue(emailPassword);
+                            currentUser.child("uid").setValue(userId);
+                            currentUser.child("friendList").setValue(null);
                             // switch activity using intent
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
-                            toastMessage("Registration was unsuccessful! Check ");
+                            toastMessage("Registration was unsuccessful!");
                         }
                         mProgressDialog.dismiss();
                     }
