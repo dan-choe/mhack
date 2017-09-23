@@ -10,6 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.dutchpay.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
 
         <activity android:name=".LogInActivity">
             <intent-filter>
@@ -31,6 +41,11 @@
         <activity android:name=".ConfirmActivity">
 
         </activity>
+
+        <activity
+            android:name=".helper.SelectImageActivity"
+            android:label="@string/select_an_image"
+            android:screenOrientation="portrait" />
 
     </application>
 

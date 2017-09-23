@@ -64,7 +64,8 @@ public class SelectImageActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_image);
+        System.out.println("==> SelectImageActivity. onCreate()");
+        setContentView(R.layout.activity_main);
     }
 
     // Save the activity state when it's going to stop.
@@ -115,6 +116,7 @@ public class SelectImageActivity extends ActionBarActivity {
 
     // When the button of "Take a Photo with Camera" is pressed.
     public void takePhoto(View view) {
+        System.out.println("===================> SelectImageActivity. takePhoto()");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(intent.resolveActivity(getPackageManager()) != null) {
             // Save the photo taken to a temporary file.
