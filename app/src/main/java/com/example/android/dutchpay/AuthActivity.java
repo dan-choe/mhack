@@ -64,7 +64,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (view == logInButton) {
-            startActivity(new Intent(this, LogInActivity.class));
+            finish();
         }
     }
 

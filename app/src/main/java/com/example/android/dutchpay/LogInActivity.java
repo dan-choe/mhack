@@ -56,7 +56,7 @@ public class LogInActivity extends AppCompatActivity implements View.OnClickList
             firebaseLogIn();
         }
         if (v == regButton) {
-            finish();
+            startActivity(new Intent(this, AuthActivity.class));
         }
     }
 
