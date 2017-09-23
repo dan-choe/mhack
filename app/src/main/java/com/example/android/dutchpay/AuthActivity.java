@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,8 +71,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     private void firebaseRegister() {
         final String userName = userIdText.getText().toString();
-        final String emailAddress = emailAddressText.getText().toString();
-        final String emailPassword = emailPasswordText.getText().toString();
+        String emailAddress = emailAddressText.getText().toString();
+        String emailPassword = emailPasswordText.getText().toString();
 
         // check for valid inputs
         if (!checkForValidInputs(emailAddress, emailPassword)) {
@@ -94,9 +95,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             DatabaseReference currentUser = mDatabaseReference.child(userId);
                             currentUser.child("username").setValue(userName);
                             currentUser.child("uid").setValue(userId);
-                            currentUser.child("email").setValue(emailAddress);
-                            currentUser.child("password").setValue(emailPassword);
                             // switch activity using intent
+                            Log.d("asdf", "authenticate");
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
