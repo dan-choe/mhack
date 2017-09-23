@@ -1,7 +1,10 @@
 package com.example.android.dutchpay;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -123,13 +130,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TAKE_PHOTO) {
             if(resultCode == RESULT_OK) {
-
+                /*Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                intent.putExtra("BitmapImage", imageBitmap);
+                startActivity(intent);*/
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                String fileName = createImageFromBitmap(imageBitmap);
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                startActivity(intent);
             }
         }
-        else if(requestCode == CHOOSE_GALLERY) {
+        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
             if(resultCode == RESULT_OK) {
-
+                Uri imageUri = data.getData();
+                try {
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    String fileName = createImageFromBitmap(imageBitmap);
+                    Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                    startActivity(intent);
+                } catch (IOException e) {
+                }
             }
         }
+    }
+
+    public String createImageFromBitmap(Bitmap bitmap) {
+        String fileName = "receiptImage";
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            FileOutputStream fo = openFileOutput(fileName, Context.MODE_PRIVATE);
+            fo.write(bytes.toByteArray());
+            // remember close file output
+            fo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fileName = null;
+        }
+        return fileName;
     }
 }

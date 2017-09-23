@@ -28,6 +28,10 @@
 
         </activity>
 
+        <activity android:name=".ConfirmActivity">
+
+        </activity>
+
     </application>
 
 </manifest>
