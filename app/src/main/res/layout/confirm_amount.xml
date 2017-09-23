@@ -7,10 +7,34 @@
     <ImageView
         android:id="@+id/receipt_image"
         android:layout_width="match_parent"
-        android:layout_height="500px"
+        android:layout_height="700px"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="16dp"
         app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+
+    <TextView
+        android:id="@+id/total_is"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/receipt_image"
+        android:layout_marginLeft="86dp"
+        android:layout_marginStart="86dp"
+        android:layout_marginTop="24dp"
+        android:text="Total is: " />
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
+        android:text="$0"
+        android:layout_alignBaseline="@+id/total_is"
+        android:layout_alignBottom="@+id/total_is"
+        android:layout_toRightOf="@+id/total_is"
+        android:layout_toEndOf="@+id/total_is" />
 </RelativeLayout>
