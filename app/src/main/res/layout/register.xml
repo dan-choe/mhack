@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/passwordEt"
         android:layout_alignBottom="@+id/passwordEt"
-        /android:layout_alignStart="@+id/textView0"
+        android:layout_alignStart="@+id/textView0"
         android:gravity="center"
         android:text="Email Password: "
         android:textColor="@android:color/black"
