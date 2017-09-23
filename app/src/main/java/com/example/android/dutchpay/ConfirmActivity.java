@@ -9,10 +9,6 @@ import android.widget.ImageView;
 
 import java.io.FileNotFoundException;
 
-/**
- * Created by Hyunmin Jeong on 9/23/2017.
- */
-
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView receipt_image;
 
