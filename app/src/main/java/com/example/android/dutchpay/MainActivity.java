@@ -1,6 +1,11 @@
 package com.example.android.dutchpay;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mFirebaseAuth;
@@ -37,8 +46,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog mProgressDialog;
 
     private Button add_balance;
-    private Button camera;
-    private Button gallery;
+    private Button access_camera;
+    private Button access_gallery;
+
+    private static final int TAKE_PHOTO = 1;
+    private static final int CHOOSE_GALLERY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +61,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
         mProgressDialog = new ProgressDialog(this);
+
+        add_balance = (Button)findViewById(R.id.add_balance);
+        add_balance.setOnClickListener(this);
+        access_camera = (Button)findViewById(R.id.access_camera);
+        access_camera.setOnClickListener(this);
+        access_gallery = (Button)findViewById(R.id.access_gallery);
+        access_gallery.setOnClickListener(this);
 
         // set the title as the user email
         if (mFirebaseUser != null) {
@@ -61,7 +80,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-
+        if (v == add_balance) {
+            addBalance();
+        }
+        if (v == access_camera) {
+            accessCamera();
+        }
+        if (v == access_gallery) {
+            accessGallery();
+        }
     }
 
     public void addBalance(final int addAmount) {
@@ -176,5 +203,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // helper function to toast a message
     public void toastMessage(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public void addBalance() {
+        //Intent addBalance = new Intent(getApplicationContext(), BalanceActivity.class);
+        //startActivity(BalanceActivity);
+    }
+    public void accessCamera() {
+        dispatchTakePictureIntent();
+    }
+    public void accessGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_GALLERY);
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, TAKE_PHOTO);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == TAKE_PHOTO) {
+            if(resultCode == RESULT_OK) {
+                /*Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                intent.putExtra("BitmapImage", imageBitmap);
+                startActivity(intent);*/
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                String fileName = createImageFromBitmap(imageBitmap);
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                startActivity(intent);
+            }
+        }
+        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
+            if(resultCode == RESULT_OK) {
+                Uri imageUri = data.getData();
+                try {
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    String fileName = createImageFromBitmap(imageBitmap);
+                    Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                    startActivity(intent);
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+
+    public String createImageFromBitmap(Bitmap bitmap) {
+        String fileName = "receiptImage";
+        try {
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            FileOutputStream fo = openFileOutput(fileName, Context.MODE_PRIVATE);
+            fo.write(bytes.toByteArray());
+            // remember close file output
+            fo.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fileName = null;
+        }
+        return fileName;
     }
 }
