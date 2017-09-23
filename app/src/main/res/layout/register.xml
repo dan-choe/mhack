@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Email Address: "
+        android:textAllCaps="false"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText,RtlHardcoded"
+        android:layout_marginStart="30dp"
+        android:layout_alignBaseline="@+id/emailEt"
+        android:layout_alignBottom="@+id/emailEt"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/passwordEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:inputType="textPassword"
+        android:password="true"
+        android:layout_marginTop="6dp"
+        tools:ignore="Deprecated,LabelFor,RtlHardcoded"
+        android:layout_below="@+id/emailEt"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView1" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Email Password: "
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText,RtlHardcoded"
+        android:layout_alignBaseline="@+id/passwordEt"
+        android:layout_alignBottom="@+id/passwordEt"
+        android:layout_alignStart="@+id/textView0" />
+
+    <EditText
+        android:id="@+id/emailEt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="158dp"
+
+        tools:ignore="LabelFor,RelativeOverlap,RtlHardcoded,TextFields"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView0" />
+
+    <Button
+        android:id="@+id/logInButton"
+        android:layout_width="230sp"
+        android:layout_height="65sp"
+        android:layout_marginTop="29dp"
+        android:backgroundTint="#E8F5E9"
+        android:text="Already Registered?"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText,RtlHardcoded,UnusedAttribute"
+        android:layout_below="@+id/registerButton"
+        android:layout_alignLeft="@+id/registerButton"
+        android:layout_alignStart="@+id/registerButton" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="230sp"
+        android:layout_height="65sp"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#E8F5E9"
+        android:text="Register"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText,UnusedAttribute"
+        android:layout_below="@+id/passwordEt"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText"
+        android:layout_marginBottom="27dp"
+        android:layout_above="@+id/userID"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:text="User ID: "
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:id="@+id/textView8"
+        android:layout_above="@+id/textView0"
+        android:layout_alignLeft="@+id/textView0"
+        android:layout_alignStart="@+id/textView0"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/userID"
+        android:layout_width="100sp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@android:color/black"
+        tools:ignore="LabelFor,RtlHardcoded,TextFields"
+        android:layout_alignBaseline="@+id/textView8"
+        android:layout_alignBottom="@+id/textView8"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView8" />
+
+
+</RelativeLayout>

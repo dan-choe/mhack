@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DutchPay</string>
+    <string name="register_email_text">"Email Address: " </string>
 </resources>
