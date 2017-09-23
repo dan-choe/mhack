@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DutchPay</string>
     <string name="register_email_text">"Email Address: " </string>
+    <string name="subscription_key">326e256ff2e6456193f91832ebd1d744</string>
 </resources>
