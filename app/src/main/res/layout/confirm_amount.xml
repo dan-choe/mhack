@@ -51,7 +51,9 @@
         android:layout_alignBaseline="@+id/dsign"
         android:layout_alignBottom="@+id/dsign"
         android:layout_toEndOf="@+id/dsign"
-        android:layout_toRightOf="@+id/dsign"/>
+        android:layout_toRightOf="@+id/dsign"
+        android:maxLines="1"
+        android:inputType="text"/>
 
     <Button
         android:id="@+id/ok_btn"
@@ -60,7 +62,6 @@
         android:layout_below="@+id/total"
         android:background="@drawable/buttonshape"
         android:backgroundTint="#E8F5E9"
-        android:layout_marginTop="68dp"
         android:layout_marginLeft="50dp"
         android:text="OK"
         android:layout_toLeftOf="@+id/dsign"

@@ -36,7 +36,7 @@
         android:layout_alignStart="@+id/emailAddressEdit"
         android:layout_below="@+id/emailAddressEdit"
         android:layout_marginTop="24dp"
-
+        android:maxLines="1"
         android:inputType="textPassword"
         android:text="" />
 
@@ -64,6 +64,8 @@
         android:layout_marginTop="125dp"
         android:layout_toRightOf="@+id/textView1"
         android:text=""
+        android:maxLines="1"
+        android:inputType="text"
         tools:ignore="RtlHardcoded,TextFields" />
 
     <Button
