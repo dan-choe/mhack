@@ -76,6 +76,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
             startActivity(new Intent(this, LogInActivity.class));
         }
+
+        if (getString(R.string.subscription_key).startsWith("Please")) {
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.add_subscription_key_tip_title))
+                    .setMessage(getString(R.string.add_subscription_key_tip))
+                    .setCancelable(false)
+                    .show();
+        }
     }
 
     @Override
@@ -175,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    public void activityRecognize(View v) {
+        Intent intent = new Intent(this, RecognizeActivity.class);
+        startActivity(intent);
     }
 
 

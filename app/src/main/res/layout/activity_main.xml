@@ -25,6 +25,7 @@
         android:layout_toStartOf="@+id/add_balance"
         android:backgroundTint="@color/colorPrimary"
         android:elevation="0dp"
+        android:onClick="takePhoto"
         android:text="Take Photo"
         android:textAlignment="center"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
@@ -33,12 +34,13 @@
         android:id="@+id/access_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose from Gallery"
+        android:layout_alignBottom="@+id/access_camera"
+        android:layout_below="@+id/add_balance"
         android:layout_marginLeft="21dp"
         android:layout_marginStart="21dp"
         android:layout_toRightOf="@+id/access_camera"
-        android:layout_alignBottom="@+id/access_camera"
-        android:layout_below="@+id/add_balance" />
+        android:onClick="selectImageInAlbum"
+        android:text="Choose from Gallery" />
 
     <EditText
         android:id="@+id/balance"
