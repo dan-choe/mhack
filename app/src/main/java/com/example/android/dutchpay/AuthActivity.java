@@ -93,7 +93,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                             String userId = mFirebaseAuth.getCurrentUser().getUid();
                             DatabaseReference currentUser = mDatabaseReference.child(userId);
-                            currentUser.child("Name").setValue(userName);
+                            currentUser.child("username").setValue(userName);
                             currentUser.child("email").setValue(emailAddress);
                             currentUser.child("password").setValue(emailPassword);
                             currentUser.child("uid").setValue(userId);
