@@ -97,8 +97,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             currentUser.child("email").setValue(emailAddress);
                             currentUser.child("password").setValue(emailPassword);
                             currentUser.child("uid").setValue(userId);
+                            currentUser.child("friendList").setValue(null);
                             // switch activity using intent
-                            Log.d("asdf", "authenticate");
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
