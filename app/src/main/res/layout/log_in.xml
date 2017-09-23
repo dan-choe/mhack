@@ -94,8 +94,8 @@
         android:textColor="@android:color/black"
         android:textSize="36sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="30dp"
+        tools:ignore="HardcodedText"
         android:layout_above="@+id/textView0"
-        android:layout_centerHorizontal="true"
-        tools:ignore="HardcodedText" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
