@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.example.android.dutchpay.ConfirmActivity">
 
     <ImageView
         android:id="@+id/receipt_image"
@@ -24,17 +26,56 @@
         android:layout_marginLeft="86dp"
         android:layout_marginStart="86dp"
         android:layout_marginTop="24dp"
-        android:text="Total is: " />
+        android:text="Total: "
+        android:textSize="24sp" />
+
 
     <TextView
+        android:id="@+id/dsign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/total_is"
+        android:layout_alignBottom="@+id/total_is"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
         android:id="@+id/total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="0.00"
+        android:textSize="24sp"
         android:layout_marginLeft="28dp"
         android:layout_marginStart="28dp"
-        android:text="$0"
-        android:layout_alignBaseline="@+id/total_is"
-        android:layout_alignBottom="@+id/total_is"
-        android:layout_toRightOf="@+id/total_is"
-        android:layout_toEndOf="@+id/total_is" />
+        android:layout_alignBaseline="@+id/dsign"
+        android:layout_alignBottom="@+id/dsign"
+        android:layout_toEndOf="@+id/dsign"
+        android:layout_toRightOf="@+id/dsign"/>
+
+    <Button
+        android:id="@+id/ok_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/total"
+        android:background="@drawable/buttonshape"
+        android:backgroundTint="#E8F5E9"
+        android:layout_marginTop="68dp"
+        android:layout_marginLeft="50dp"
+        android:text="OK"
+        android:layout_toLeftOf="@+id/dsign"
+        android:layout_toStartOf="@+id/dsign" />
+
+    <Button
+        android:id="@+id/discard_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/ok_btn"
+        android:layout_alignBottom="@+id/ok_btn"
+        android:background="@drawable/buttonshape"
+        android:backgroundTint="#E8F5E9"
+        android:text="Discard"
+        android:layout_marginRight="50dp"
+        android:layout_toRightOf="@+id/dsign"
+        android:layout_toEndOf="@+id/dsign" />
 </RelativeLayout>
