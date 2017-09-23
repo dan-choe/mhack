@@ -19,31 +19,52 @@
         android:id="@+id/access_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Take Photo"
-        android:layout_marginBottom="88dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="84dp"
         android:layout_toLeftOf="@+id/add_balance"
-        android:layout_toStartOf="@+id/add_balance" />
+        android:layout_toStartOf="@+id/add_balance"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="0dp"
+        android:onClick="takePhoto"
+        android:text="Take Photo"
+        android:textAlignment="center"
+        android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
     <Button
         android:id="@+id/access_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose from Gallery"
-        android:layout_alignBaseline="@+id/access_camera"
         android:layout_alignBottom="@+id/access_camera"
-        android:layout_toRightOf="@+id/access_camera"
-        android:layout_toEndOf="@+id/access_camera"
+        android:layout_below="@+id/add_balance"
         android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp" />
+        android:layout_marginStart="21dp"
+        android:layout_toRightOf="@+id/access_camera"
+        android:onClick="selectImageInAlbum"
+        android:text="Choose from Gallery" />
 
     <EditText
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="$"
+        android:textSize="80sp"
+        android:layout_alignBaseline="@+id/editText"
+        android:layout_alignBottom="@+id/editText"
+        android:layout_toLeftOf="@+id/access_gallery"
+        android:layout_toStartOf="@+id/access_gallery" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/add_balance"
-        android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@+id/access_gallery"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/access_gallery"
         android:layout_marginBottom="32dp"
-        android:text="$0"
-        android:textSize="40sp" />
+        android:layout_marginTop="96dp"
+        android:lineSpacingExtra="0sp"
+        android:text="0.00"
+        android:textAlignment="textEnd"
+        android:textSize="80sp" />
 </RelativeLayout>
