@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,6 +36,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabaseRef;
     private ProgressDialog mProgressDialog;
 
+    private Button add_balance;
+    private Button camera;
+    private Button gallery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

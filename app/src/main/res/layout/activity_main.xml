@@ -1,18 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.dutchpay.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/add_balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Add Balance"
+        android:layout_marginBottom="19dp"
+        android:layout_above="@+id/access_camera"
+        android:layout_centerHorizontal="true" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/access_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take Photo"
+        android:layout_marginBottom="88dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/add_balance"
+        android:layout_toStartOf="@+id/add_balance" />
+
+    <Button
+        android:id="@+id/access_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose from Gallery"
+        android:layout_alignBaseline="@+id/access_camera"
+        android:layout_alignBottom="@+id/access_camera"
+        android:layout_toRightOf="@+id/access_camera"
+        android:layout_toEndOf="@+id/access_camera"
+        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp" />
+
+    <EditText
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/add_balance"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="$0"
+        android:textSize="40sp" />
+</RelativeLayout>
