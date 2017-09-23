@@ -97,7 +97,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
                         else {
-                            toastMessage("Registration was unsuccessful! Check ");
+                            toastMessage("Registration was unsuccessful!");
                         }
                         mProgressDialog.dismiss();
                     }
