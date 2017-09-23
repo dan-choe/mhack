@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void doRecognize() {
         //mButtonSelectImage.setEnabled(false);
-        mEditText.setText("Analyzing...");
+        //mEditText.setText("Analyzing...");
 
         try {
             new doRequest().execute();
