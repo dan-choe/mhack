@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText emailAddressText;
@@ -97,7 +99,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             currentUser.child("email").setValue(emailAddress);
                             currentUser.child("password").setValue(emailPassword);
                             currentUser.child("uid").setValue(userId);
-                            currentUser.child("friendList").setValue(null);
+                            currentUser.child("friendList").setValue(new ArrayList<>());
                             // switch activity using intent
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
