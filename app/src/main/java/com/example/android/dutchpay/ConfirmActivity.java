@@ -39,6 +39,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView receipt_image;
     private Button cancel_button;
     private Button check_button;
+    private static double TOTAL_AMOUNT = 0;
 
     protected Bitmap bitmap;
     private VisionServiceClient client;
@@ -78,6 +79,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         }
         if (v == check_button) {
             startActivity(new Intent(getApplicationContext(), FriendListActivity.class));
+            TOTAL_AMOUNT = Double.parseDouble(mTotalText.getText().toString());
         }
     }
 
@@ -192,7 +194,11 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 mTotalText.setText(String.valueOf(max));
+                TOTAL_AMOUNT = max;
             }
         }
+    }
+    public static double get_TOTAL_AMOUNT() {
+        return TOTAL_AMOUNT;
     }
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/btnCheckAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="7dip"
+            android:text="Check All"
+            tools:ignore="ButtonStyle,HardcodedText,RtlHardcoded"></Button>
+
+        <Button
+            android:id="@+id/btnClearAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear All"
+            tools:ignore="ButtonStyle,HardcodedText"></Button>
+
+        <Button
+            android:id="@+id/confirm_friends"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.70"
+            android:text="send" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@null"
+        android:fadingEdge="none"
+        android:layout_below="@+id/linearLayout"></ListView>
+
+</RelativeLayout>

@@ -153,7 +153,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void processRequest(@NonNull User u) {
-        if (u == null || u.getChange() == 0 || u.getChangeBy() == "")
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
+        if(!u.getUid().equals(mFirebaseUser.getUid()) )
+            return;
+        if (u.getChange() == 0 || u.getChangeBy().equals(""))
             return;
 
         double amount = u.getChange();
@@ -172,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void requestBalance(double amount) {
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
+
         mDatabaseUserRef.child("change").setValue(amount);
         mDatabaseUserRef.child("changeBy").setValue(mFirebaseUser.getUid());
     }
@@ -189,23 +200,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void singleRequest(String friend, double amount) {
-        JSONObject change = new JSONObject();
-        try {
-            change.put("amount", 0 - amount);
-            change.put("by", mFirebaseUser.getUid());
-        }
-        catch (JSONException e) {}
-        mDatabaseRef.child(friend).child("change").setValue(change);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
+
+        mDatabaseRef.child(friend).child("change").setValue(0 - amount);
+        mDatabaseRef.child(friend).child("changeBy").setValue(mFirebaseUser.getUid());
     }
 
     public void singlePayment(String friend, double amount) {
-        JSONObject change = new JSONObject();
-        try {
-            change.put("amount", 0 - amount);
-            change.put("by", mFirebaseUser.getUid());
-        }
-        catch (JSONException e) {}
-        mDatabaseRef.child(friend).child("change").setValue(change);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
+
+        mDatabaseUserRef.child("change").setValue(0);
+        mDatabaseUserRef.child("changeBy").setValue("");
+
+        mDatabaseRef.child(friend).child("change").setValue(amount);
+        mDatabaseRef.child(friend).child("changeBy").setValue(mFirebaseUser.getUid());
     }
 
     // custom log out method on the right top corner as a menu
