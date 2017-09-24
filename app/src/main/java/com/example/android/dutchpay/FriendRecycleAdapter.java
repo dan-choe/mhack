@@ -71,13 +71,13 @@ public class FriendRecycleAdapter extends RecyclerView.Adapter<FriendRecycleAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public TextView email;
-        public Button addB;
+        public CheckBox addB;
 
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             email = (TextView) itemView.findViewById(R.id.row_email);
-            addB = (Button) itemView.findViewById(R.id.row_add);
+            addB = (CheckBox) itemView.findViewById(R.id.row_add);
         }
     }
 }
