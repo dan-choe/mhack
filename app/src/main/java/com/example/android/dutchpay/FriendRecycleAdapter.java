@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,7 +50,13 @@ public class FriendRecycleAdapter extends RecyclerView.Adapter<FriendRecycleAdap
         holder.addB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkedFriends.add(newU.getUid());
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    checkedFriends.add(newU.getUid());
+                }
+                else {
+                    checkedFriends.remove(newU.getUid());
+                }
             }
         });
     }
