@@ -33,6 +33,7 @@
         android:inputType="textPassword"
         android:password="true"
         android:text=""
+        android:maxLines="1"
         android:layout_marginRight="20dp"
         tools:ignore="Deprecated,LabelFor,RtlHardcoded" />
 
@@ -61,6 +62,8 @@
         android:layout_marginRight="20dp"
         android:layout_toEndOf="@+id/textView0"
         android:text=""
+        android:maxLines="1"
+        android:inputType="text"
         tools:ignore="LabelFor,RelativeOverlap,RtlHardcoded,TextFields" />
 
     <Button
@@ -129,6 +132,8 @@
         android:layout_toEndOf="@+id/textView8"
         android:layout_marginRight="20dp"
         android:text=""
+        android:maxLines="1"
+        android:inputType="text"
         android:textColor="@android:color/black"
         tools:ignore="LabelFor,RtlHardcoded,TextFields" />
 

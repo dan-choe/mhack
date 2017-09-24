@@ -36,7 +36,7 @@
         android:layout_alignStart="@+id/emailAddressEdit"
         android:layout_below="@+id/emailAddressEdit"
         android:layout_marginTop="24dp"
-
+        android:maxLines="1"
         android:inputType="textPassword"
         android:text="" />
 
@@ -64,6 +64,8 @@
         android:layout_marginTop="125dp"
         android:layout_toRightOf="@+id/textView1"
         android:text=""
+        android:maxLines="1"
+        android:inputType="text"
         tools:ignore="RtlHardcoded,TextFields" />
 
     <Button
@@ -74,7 +76,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:background="@drawable/buttonshape"
-        android:backgroundTint="#E8F5E9"
+        android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
         android:shadowColor="#A8A8A8"
         android:text="Log In"
         android:textSize="16sp"
@@ -89,7 +91,7 @@
         android:layout_below="@+id/logButton"
         android:layout_marginTop="31dp"
         android:background="@drawable/buttonshape"
-        android:backgroundTint="#E8F5E9"
+        android:backgroundTint="@color/registerBtn"
         android:shadowColor="#A8A8A8"
         android:text="Not Registered?"
         android:textSize="16sp"
@@ -99,13 +101,15 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/textView0"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
+        android:fontFamily="sans-serif"
         android:gravity="center"
         android:text="Sign In"
         android:textColor="@android:color/black"
         android:textSize="36sp"
         android:textStyle="bold"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/emailAddressEdit"
+        android:layout_alignStart="@+id/emailAddressEdit"
+        android:layout_marginTop="45dp" />
 </RelativeLayout>

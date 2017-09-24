@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
         mDatabaseUserRef.addValueEventListener(postListener);
 
-
         // set the title as the user email
         if (mFirebaseUser != null) {
             setTitle(mFirebaseUser.getEmail());
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else {
             startActivity(new Intent(this, LogInActivity.class));
         }
-
+      
         // for added balance
         if (getIntent().hasExtra("add_balance")) {
             requestBalance(getIntent().getExtras().getDouble("add_balance"));
@@ -141,8 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v == add_balance) {
             addBalance();
         }
+
         if (v == access_camera) {
             accessCamera();
+            //selectImage();
         }
         if (v == access_gallery) {
             accessGallery();
@@ -245,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), CHOOSE_GALLERY);
     }
 
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -292,6 +294,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // }
         }
     }
+
+    /*
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("AnalyzeActivity", "onActivityResult");
+        if(requestCode == TAKE_PHOTO) {
+            if(resultCode == RESULT_OK) {
+                // If image is selected successfully, set the image URI and bitmap.
+                mImageUri = data.getData();
+
+                mBitmap = ImageHelper.loadSizeLimitedBitmapFromUri(
+                        mImageUri, getContentResolver());
+                if (mBitmap != null) {
+                    // Show the image on screen.
+                    // ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                    // imageView.setImageBitmap(mBitmap);
+
+                    // Add detection log.
+                    Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
+                            + "x" + mBitmap.getHeight());
+
+                    doRecognize();
+                }
+
+            }
+        }
+        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
+            if(resultCode == RESULT_OK) {
+                Uri imageUri = data.getData();
+                try {
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    String fileName = createImageFromBitmap(imageBitmap);
+                    Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                    startActivity(intent);
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
+    */
 
     public String createImageFromBitmap(Bitmap bitmap) {
         String fileName = "receiptImage";

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.net.Uri;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
+
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.LanguageCodes;
 import com.microsoft.projectoxford.vision.contract.Line;
@@ -30,9 +33,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Created by Hyunmin Jeong on 9/23/2017.
- */
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageView receipt_image;
@@ -42,6 +48,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected Bitmap bitmap;
     private VisionServiceClient client;
     private EditText mTotalText;
+
     protected Uri mImg;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
 
         if (client == null)
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
+
 
         try{
             mImg = getIntent().getData();
@@ -65,6 +73,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         cancel_button = (Button)findViewById(R.id.cancel_button);
         cancel_button.setOnClickListener(this);
         check_button = (Button)findViewById(R.id.check_button);
+
         check_button.setOnClickListener(this);
     }
 
@@ -84,6 +93,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             System.out.println(e.toString());
         }
     }
+
     private String process() throws VisionServiceException, IOException {
         Gson gson = new Gson();
 
@@ -96,6 +106,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         bitMap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
 
         OCR ocr;

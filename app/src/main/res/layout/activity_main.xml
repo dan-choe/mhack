@@ -40,6 +40,17 @@
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="$"
+        android:textSize="80sp"
+        android:layout_alignBaseline="@+id/editText"
+        android:layout_alignBottom="@+id/editText"
+        android:layout_toLeftOf="@+id/access_gallery"
+        android:layout_toStartOf="@+id/access_gallery" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/add_balance"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="68dp"

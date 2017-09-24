@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText emailAddressText;
@@ -108,6 +109,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             currentUser.child("balance").setValue(0);
                             currentUser.child("change").setValue(0);
                             currentUser.child("changeBy").setValue("");
+
                             // switch activity using intent
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
