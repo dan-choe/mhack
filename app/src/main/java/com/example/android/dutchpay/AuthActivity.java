@@ -105,8 +105,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             List<String> friendList = new ArrayList<String>();
                             currentUser.child("friendList").setValue(friendList);
                             currentUser.child("balance").setValue(0);
-                            JSONObject change = new JSONObject();
-                            currentUser.child("change").setValue(change);
+                            currentUser.child("change").setValue(0);
+                            currentUser.child("changeBy").setValue("");
                             // switch activity using intent
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }

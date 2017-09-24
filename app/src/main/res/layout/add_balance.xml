@@ -16,27 +16,15 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:id="@+id/addBalance_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:layout_marginStart="65dp"
-        android:text="Cancel"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
         android:id="@+id/addBalance_yes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Request"
-        android:layout_alignBaseline="@+id/addBalance_cancel"
-        android:layout_alignBottom="@+id/addBalance_cancel"
-        android:layout_toRightOf="@+id/addBalance_cancel"
-        android:layout_toEndOf="@+id/addBalance_cancel"
-        android:layout_marginLeft="63dp"
-        android:layout_marginStart="63dp" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="46dp"
+        android:layout_marginEnd="46dp" />
 
     <TextView
         android:id="@+id/dollar_sign"

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button add_balance;
     private Button access_camera;
     private Button access_gallery;
+    private Button add_friend;
     private TextView t;
 
     private static final int TAKE_PHOTO = 1;
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         access_camera.setOnClickListener(this);
         access_gallery = (Button)findViewById(R.id.access_gallery);
         access_gallery.setOnClickListener(this);
+        add_friend = (Button)findViewById(R.id.add_friend);
+        add_friend.setOnClickListener(this);
         t = (TextView)findViewById(R.id.balance);
 
         ValueEventListener postListener = new ValueEventListener() {
@@ -130,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v == access_gallery) {
             accessGallery();
         }
+        if(v == add_friend) {
+            startActivity(new Intent(getApplicationContext(), AddFriendActivity.class));
+        }
     }
 
     public void processRequest(@NonNull User u) {
@@ -147,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
         mDatabaseUserRef.child("change").setValue(0);
+        mDatabaseUserRef.child("changeBy").setValue("");
         mDatabaseUserRef.child("balance").setValue(u.getBalance());
     }
 
@@ -186,68 +193,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         catch (JSONException e) {}
         mDatabaseRef.child(friend).child("change").setValue(change);
     }
-
-    /*private void payTheRequest(final String friend, final double amount) {
-
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                String me = mFirebaseUser.getUid();
-                String friendUid;
-                Map<String, Object> childUpdates = new HashMap<>();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user.username.equals(friend)) {
-                        friendUid = user.uid;
-                        childUpdates.put("/" + friendUid + "/balance/", user.balance + amount);
-                    }
-                    if (user.uid.equals(me)) {
-                        childUpdates.put("/" + me + "/balance/", user.balance - amount);
-
-                        // check if it is possible to send the amount of money
-                        if (user.balance - amount < 0) {
-
-                            // dialog box
-                            LayoutInflater mLayoutInflater = LayoutInflater.from(MainActivity.this);
-                            View mPromptView = mLayoutInflater.inflate(R.layout.dialog, null);
-                            AlertDialog.Builder alertDialogBox = new AlertDialog.Builder(MainActivity.this);
-                            alertDialogBox.setView(mPromptView);
-
-                            alertDialogBox.setCancelable(false)
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBox.create();
-                            alert.show();
-                            mProgressDialog.dismiss();
-                            return;
-                        }
-                    }
-                }
-
-                mProgressDialog.setMessage("Uploading...");
-                mProgressDialog.show();
-
-                mDatabaseRef.updateChildren(childUpdates);
-                mProgressDialog.dismiss();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("PAY_REQUEST", "pay request failed");
-            }
-        });
-
-    }*/
-
-
-
-
 
     // custom log out method on the right top corner as a menu
     @Override
@@ -330,5 +275,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fileName = null;
         }
         return fileName;
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

@@ -65,4 +65,16 @@
         android:layout_alignTop="@+id/balance"
         android:layout_alignLeft="@+id/add_balance"
         android:layout_alignStart="@+id/add_balance" />
+
+    <Button
+        android:id="@+id/add_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="43dp"
+        android:text="Add Friend" />
 </RelativeLayout>
