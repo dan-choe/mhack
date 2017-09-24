@@ -36,10 +36,10 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == ok_btn) {
-
+            startActivity(new Intent(this, FriendListActivity.class));
         }
         if (v == discard_btn ) {
-            finish();
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 }
