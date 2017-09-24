@@ -78,11 +78,12 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void onClick(View v) {
+
         if (v == cancel_button) {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         if (v == check_button) {
-
+            startActivity(new Intent(this, FriendListActivity.class));
         }
     }
 

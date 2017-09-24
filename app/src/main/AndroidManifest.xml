@@ -49,6 +49,15 @@
 
         </activity>
 
+        <activity android:name=".FriendListActivity">
+
+        </activity>
+
+        <activity
+            android:name=".helper.SelectImageActivity"
+            android:label="@string/select_an_image"
+            android:screenOrientation="portrait" />
+  
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>

@@ -35,28 +35,13 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <EditText
+                <TextView
                     android:id="@+id/row_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Email: "
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/row_usern"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Username: "
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -69,12 +54,12 @@
             android:layout_weight="1.5"
             android:orientation="horizontal">
 
-            <Button
+            <CheckBox
                 android:id="@+id/row_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:text="ADD" />
+                android:layout_marginLeft="25sp"
+                android:layout_gravity="center_vertical|center_horizontal" />
 
         </LinearLayout>
 
