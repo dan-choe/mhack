@@ -3,6 +3,8 @@ package com.example.android.dutchpay;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.net.Uri;
 
-import com.example.android.dutchpay.helper.ImageHelper;
 import com.google.gson.Gson;
+import com.microsoft.projectoxford.vision.VisionServiceClient;
+
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.LanguageCodes;
 import com.microsoft.projectoxford.vision.contract.Line;
@@ -22,7 +25,13 @@ import com.microsoft.projectoxford.vision.contract.OCR;
 import com.microsoft.projectoxford.vision.contract.Region;
 import com.microsoft.projectoxford.vision.contract.Word;
 import com.microsoft.projectoxford.vision.rest.VisionServiceException;
-import com.microsoft.projectoxford.vision.VisionServiceClient;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +49,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     private VisionServiceClient client;
     private EditText mTotalText;
 
+    protected Uri mImg;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.confirm_amount);
@@ -47,20 +58,22 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         if (client == null)
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
 
-        try {
+
+        try{
+            mImg = getIntent().getData();
             bitmap = BitmapFactory.decodeStream(this.openFileInput("receiptImage"));
             receipt_image = (ImageView) findViewById(R.id.receipt_image);
             receipt_image.setImageBitmap(bitmap);
 
             if (bitmap != null)
                 doRecognize();
-
-        } catch (FileNotFoundException e) {
+        }catch (FileNotFoundException e) {
         }
         mTotalText = (EditText) findViewById(R.id.total);
-        cancel_button = (Button) findViewById(R.id.discard_btn);
+        cancel_button = (Button)findViewById(R.id.cancel_button);
         cancel_button.setOnClickListener(this);
-        check_button = (Button) findViewById(R.id.discard_btn);
+        check_button = (Button)findViewById(R.id.check_button);
+
         check_button.setOnClickListener(this);
     }
 
@@ -85,8 +98,15 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Gson gson = new Gson();
 
         // Put the image into an input stream for detection.
+        Bitmap bitMap = BitmapFactory.decodeFile(mImg.getPath());
+
+        if (bitMap == null){
+            bitMap = bitmap;
+        }
+
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        bitMap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
 
         OCR ocr;
