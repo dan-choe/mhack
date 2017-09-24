@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -65,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CHOOSE_GALLERY = 2;
 
     private static final String TAG = "MainActivity";
+
+    private Uri mUriPhotoTaken;
+    private File mFilePhotoTaken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +125,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // for added balance
         if (getIntent().hasExtra("add_balance")) {
             requestBalance(getIntent().getExtras().getDouble("add_balance"));
+        }
+
+        if (getString(R.string.subscription_key).startsWith("Please")) {
+            new android.app.AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.add_subscription_key_tip_title))
+                    .setMessage(getString(R.string.add_subscription_key_tip))
+                    .setCancelable(false)
+                    .show();
         }
     }
 
@@ -233,31 +247,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                mFilePhotoTaken = File.createTempFile(
+                        "IMG_",  /* prefix */
+                        ".jpg",         /* suffix */
+                        storageDir      /* directory */
+                );
+                if (mFilePhotoTaken != null) {
+                    mUriPhotoTaken = FileProvider.getUriForFile(this,
+                            "com.example.android.dutchpay.fileprovider",
+                            mFilePhotoTaken);
+                }
+            } catch (IOException e) {
+                //setInfo(e.getMessage());
+            }
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
             startActivityForResult(takePictureIntent, TAKE_PHOTO);
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TAKE_PHOTO) {
-            if(resultCode == RESULT_OK) {
-                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                String fileName = createImageFromBitmap(imageBitmap);
-                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                startActivity(intent);
-            }
+            //if(resultCode == RESULT_OK) {
+            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+            String fileName = createImageFromBitmap(imageBitmap);
+            Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+            intent.setData(Uri.fromFile(mFilePhotoTaken));
+            startActivity(intent);
+            // }
         }
         else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
-            if(resultCode == RESULT_OK) {
-                Uri imageUri = data.getData();
-                try {
-                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                    String fileName = createImageFromBitmap(imageBitmap);
-                    Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                    startActivity(intent);
-                } catch (IOException e) {
-                }
+            //if(resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                String fileName = createImageFromBitmap(imageBitmap);
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                intent.setData(imageUri);
+                startActivity(intent);
+            } catch (IOException e) {
             }
+            // }
         }
     }
 

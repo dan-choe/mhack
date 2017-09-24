@@ -3,6 +3,7 @@ package com.example.android.dutchpay;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected Bitmap bitmap;
     private VisionServiceClient client;
     private EditText mTotalText;
+    protected Uri mImg;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
 
         try{
+            mImg = getIntent().getData();
             bitmap = BitmapFactory.decodeStream(this.openFileInput("receiptImage"));
             receipt_image = (ImageView) findViewById(R.id.receipt_image);
             receipt_image.setImageBitmap(bitmap);
@@ -85,20 +88,18 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Gson gson = new Gson();
 
         // Put the image into an input stream for detection.
-        /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
+        Bitmap bitMap = BitmapFactory.decodeFile(mImg.getPath());
 
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(stream.toByteArray());*/
+        if (bitMap == null){
+            bitMap = bitmap;
+        }
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-        byte[] bitmapdata = bos.toByteArray();
-        ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
-
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        bitMap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
 
         OCR ocr;
-        ocr = this.client.recognizeText(bs, LanguageCodes.AutoDetect, true);
+        ocr = this.client.recognizeText(inputStream, LanguageCodes.AutoDetect, true);
 
         String result = gson.toJson(ocr);
         Log.d("result", result);
