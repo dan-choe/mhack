@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.dutchpay.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="700px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal"
-        android:layout_toStartOf="@+id/editText"
-        android:layout_marginBottom="110dp"
-        android:layout_alignBottom="@+id/balance"
-        android:layout_toLeftOf="@+id/editText"
-        android:layout_marginRight="22dp"
-        android:onClick="takePhoto"
-        android:layout_marginEnd="22dp" />
-
     <Button
         android:id="@+id/add_balance"
         android:layout_width="wrap_content"
@@ -36,30 +19,24 @@
         android:id="@+id/access_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="84dp"
-        android:layout_toLeftOf="@+id/add_balance"
-        android:layout_toStartOf="@+id/add_balance"
-        android:backgroundTint="@color/colorPrimary"
-        android:elevation="0dp"
-
         android:text="Take Photo"
-        android:textAlignment="center"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        android:layout_marginBottom="85dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/balance"
+        android:layout_toStartOf="@+id/balance" />
 
     <Button
         android:id="@+id/access_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/access_camera"
+        android:text="Choose from Gallery"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
         android:layout_below="@+id/add_balance"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp"
         android:layout_toRightOf="@+id/access_camera"
-        android:onClick="selectImageInAlbum"
-        android:text="Choose from Gallery" />
+        android:layout_toEndOf="@+id/access_camera" />
 
-    <EditText
+    <TextView
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,13 +52,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/add_balance"
-        android:layout_alignEnd="@+id/access_gallery"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/access_gallery"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="96dp"
-        android:lineSpacingExtra="0sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="68dp"
         android:text="0.00"
-        android:textAlignment="textEnd"
-        android:textSize="80sp" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/balance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:text="BALANCE"
+        android:layout_above="@+id/balance"
+        android:layout_alignLeft="@+id/access_gallery"
+        android:layout_alignStart="@+id/access_gallery" />
+
+    <TextView
+        android:id="@+id/dollar_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:layout_alignTop="@+id/balance"
+        android:layout_alignLeft="@+id/add_balance"
+        android:layout_alignStart="@+id/add_balance" />
+
+    <Button
+        android:id="@+id/add_friend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="43dp"
+        android:text="Add Friend" />
 </RelativeLayout>

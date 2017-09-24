@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,66 +34,53 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.microsoft.projectoxford.vision.VisionServiceClient;
+import com.google.gson.JsonObject;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.example.android.dutchpay.helper.*;
-import com.microsoft.projectoxford.vision.VisionServiceRestClient;
-import com.microsoft.projectoxford.vision.contract.LanguageCodes;
-import com.microsoft.projectoxford.vision.contract.Line;
-import com.microsoft.projectoxford.vision.contract.OCR;
-import com.microsoft.projectoxford.vision.contract.Region;
-import com.microsoft.projectoxford.vision.contract.Word;
-import com.microsoft.projectoxford.vision.rest.VisionServiceException;
-
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseUserRef;
     private ProgressDialog mProgressDialog;
 
     private Button add_balance;
     private Button access_camera;
     private Button access_gallery;
+    private Button add_friend;
+    private TextView t;
 
     private static final int TAKE_PHOTO = 1;
     private static final int CHOOSE_GALLERY = 2;
 
-    // The URI of the image selected to detect.
-    private Uri mImageUri;
+    private static final String TAG = "MainActivity";
 
-    // The image selected to detect.
-    private Bitmap mBitmap;
-
-    // The edit to show status and result.
-    private EditText mEditText;
-
-    private VisionServiceClient client;
+    private Uri mUriPhotoTaken;
+    private File mFilePhotoTaken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (client==null){
-            client = new VisionServiceRestClient(getString(R.string.subscription_key));
-        }
-
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
         mProgressDialog = new ProgressDialog(this);
 
         add_balance = (Button)findViewById(R.id.add_balance);
@@ -99,8 +89,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         access_camera.setOnClickListener(this);
         access_gallery = (Button)findViewById(R.id.access_gallery);
         access_gallery.setOnClickListener(this);
+        add_friend = (Button)findViewById(R.id.add_friend);
+        add_friend.setOnClickListener(this);
+        t = (TextView)findViewById(R.id.balance);
 
-        mEditText = (EditText)findViewById(R.id.editText);
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                User u = dataSnapshot.getValue(User.class);
+                processRequest(u);
+
+                DecimalFormat df = new DecimalFormat("#.00");
+                df.setRoundingMode(RoundingMode.CEILING);
+                t.setText(df.format(u.getBalance()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mDatabaseUserRef.addValueEventListener(postListener);
 
         // set the title as the user email
         if (mFirebaseUser != null) {
@@ -108,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else {
             startActivity(new Intent(this, LogInActivity.class));
+        }
+      
+        // for added balance
+        if (getIntent().hasExtra("add_balance")) {
+            requestBalance(getIntent().getExtras().getDouble("add_balance"));
         }
 
         if (getString(R.string.subscription_key).startsWith("Please")) {
@@ -126,105 +142,71 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (v == access_camera) {
-            //accessCamera();
-            selectImage();
+            accessCamera();
+            //selectImage();
         }
         if (v == access_gallery) {
             accessGallery();
         }
-    }
-
-    public void selectImage() {
-        Intent takePictureIntent = new Intent(MainActivity.this, com.example.android.dutchpay.helper.SelectImageActivity.class);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, TAKE_PHOTO);
+        if(v == add_friend) {
+            startActivity(new Intent(getApplicationContext(), AddFriendActivity.class));
         }
     }
 
-    public void addBalance(final int addAmount) {
+    public void processRequest(@NonNull User u) {
+        if (u == null || u.getChange() == 0 || u.getChangeBy() == "")
+            return;
 
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        double amount = u.getChange();
+        String by = u.getChangeBy();
 
-                String me = mFirebaseUser.getUid();
-                Map<String, Object> childUpdates = new HashMap<>();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user.uid.equals(me)) {
-                        childUpdates.put("/" + me + "/balance/", user.balance + addAmount);
-                    }
-                }
-                mDatabaseRef.updateChildren(childUpdates);
+        double balance = u.getBalance();
+        if (balance + amount >= 0) {
+            u.setBalance(balance + amount);
+            if(amount < 0) {
+                singlePayment(by, 0 - amount);
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("ADD_BALANCE", "Adding to balance failed");
-            }
-        });
+        }
+        mDatabaseUserRef.child("change").setValue(0);
+        mDatabaseUserRef.child("changeBy").setValue("");
+        mDatabaseUserRef.child("balance").setValue(u.getBalance());
     }
 
-    public void requestPayment() {
-
+    public void requestBalance(double amount) {
+        mDatabaseUserRef.child("change").setValue(amount);
+        mDatabaseUserRef.child("changeBy").setValue(mFirebaseUser.getUid());
     }
 
-    private void payTheRequest(final String friend, final int amount) {
+    public void requestPayment(List friends, double original_amount) {
+        int length = friends.size();
+        double amount = original_amount / (double) length;
+        DecimalFormat df = new DecimalFormat("#.00");
+        df.setRoundingMode(RoundingMode.CEILING);
+        amount = Double.parseDouble(df.format(amount));
 
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        for(int i = 0; i < length; i++) {
+            singleRequest(friends.get(i).toString(), amount);
+        }
+    }
 
-                String me = mFirebaseUser.getUid();
-                String friendUid;
-                Map<String, Object> childUpdates = new HashMap<>();
+    public void singleRequest(String friend, double amount) {
+        JSONObject change = new JSONObject();
+        try {
+            change.put("amount", 0 - amount);
+            change.put("by", mFirebaseUser.getUid());
+        }
+        catch (JSONException e) {}
+        mDatabaseRef.child(friend).child("change").setValue(change);
+    }
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user.username.equals(friend)) {
-                        friendUid = user.uid;
-                        childUpdates.put("/" + friendUid + "/balance/", user.balance + amount);
-                    }
-                    if (user.uid.equals(me)) {
-                        childUpdates.put("/" + me + "/balance/", user.balance - amount);
-
-                        // check if it is possible to send the amount of money
-                        if (user.balance - amount < 0) {
-
-                            // dialog box
-                            LayoutInflater mLayoutInflater = LayoutInflater.from(MainActivity.this);
-                            View mPromptView = mLayoutInflater.inflate(R.layout.dialog, null);
-                            AlertDialog.Builder alertDialogBox = new AlertDialog.Builder(MainActivity.this);
-                            alertDialogBox.setView(mPromptView);
-
-                            alertDialogBox.setCancelable(false)
-                                    .setNegativeButton("Cancel",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            // create an alert dialog
-                            AlertDialog alert = alertDialogBox.create();
-                            alert.show();
-                            mProgressDialog.dismiss();
-                            return;
-                        }
-                    }
-                }
-
-                mProgressDialog.setMessage("Uploading...");
-                mProgressDialog.show();
-
-                mDatabaseRef.updateChildren(childUpdates);
-                mProgressDialog.dismiss();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("PAY_REQUEST", "pay request failed");
-            }
-        });
-
+    public void singlePayment(String friend, double amount) {
+        JSONObject change = new JSONObject();
+        try {
+            change.put("amount", 0 - amount);
+            change.put("by", mFirebaseUser.getUid());
+        }
+        catch (JSONException e) {}
+        mDatabaseRef.child(friend).child("change").setValue(change);
     }
 
     // custom log out method on the right top corner as a menu
@@ -252,8 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void addBalance() {
-        //Intent addBalance = new Intent(getApplicationContext(), BalanceActivity.class);
-        //startActivity(BalanceActivity);
+        startActivity(new Intent(getApplicationContext(), BalanceRequestActivity.class));
     }
     public void accessCamera() {
         dispatchTakePictureIntent();
@@ -268,27 +249,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                mFilePhotoTaken = File.createTempFile(
+                        "IMG_",  /* prefix */
+                        ".jpg",         /* suffix */
+                        storageDir      /* directory */
+                );
+                if (mFilePhotoTaken != null) {
+                    mUriPhotoTaken = FileProvider.getUriForFile(this,
+                            "com.example.android.dutchpay.fileprovider",
+                            mFilePhotoTaken);
+                }
+            } catch (IOException e) {
+                //setInfo(e.getMessage());
+            }
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
             startActivityForResult(takePictureIntent, TAKE_PHOTO);
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == TAKE_PHOTO) {
+            //if(resultCode == RESULT_OK) {
+            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+            String fileName = createImageFromBitmap(imageBitmap);
+            Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+            intent.setData(Uri.fromFile(mFilePhotoTaken));
+            startActivity(intent);
+            // }
+        }
+        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
+            //if(resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+            try {
+                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                String fileName = createImageFromBitmap(imageBitmap);
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                intent.setData(imageUri);
+                startActivity(intent);
+            } catch (IOException e) {
+            }
+            // }
+        }
+    }
+
+    /*
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("AnalyzeActivity", "onActivityResult");
         if(requestCode == TAKE_PHOTO) {
             if(resultCode == RESULT_OK) {
-                /*Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                intent.putExtra("BitmapImage", imageBitmap);
-                startActivity(intent);*/
-
-                /*
-                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                String fileName = createImageFromBitmap(imageBitmap);
-                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                startActivity(intent);
-                */
-
                 // If image is selected successfully, set the image URI and bitmap.
                 mImageUri = data.getData();
 
@@ -296,8 +307,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         mImageUri, getContentResolver());
                 if (mBitmap != null) {
                     // Show the image on screen.
-                    ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                    imageView.setImageBitmap(mBitmap);
+                    // ImageView imageView = (ImageView) findViewById(R.id.imageView);
+                    // imageView.setImageBitmap(mBitmap);
 
                     // Add detection log.
                     Log.d("AnalyzeActivity", "Image: " + mImageUri + " resized to " + mBitmap.getWidth()
@@ -305,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     doRecognize();
                 }
+
             }
         }
         else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
@@ -320,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+    */
 
     public String createImageFromBitmap(Bitmap bitmap) {
         String fileName = "receiptImage";
@@ -337,129 +350,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return fileName;
     }
 
-    public void doRecognize() {
-        //mButtonSelectImage.setEnabled(false);
-        //mEditText.setText("Analyzing...");
-
-        try {
-            new doRequest().execute();
-        } catch (Exception e)
-        {
-            mEditText.setText("Error encountered. Exception is: " + e.toString());
-        }
-    }
-
-    private String process() throws VisionServiceException, IOException {
-        Gson gson = new Gson();
-
-        // Put the image into an input stream for detection.
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
-
-        OCR ocr;
-        ocr = this.client.recognizeText(inputStream, LanguageCodes.AutoDetect, true);
-
-        String result = gson.toJson(ocr);
-        Log.d("result", result);
-
-        return result;
-    }
-
-    private class doRequest extends AsyncTask<String, String, String> {
-        // Store error message
-        private Exception e = null;
-
-        public doRequest() {
-        }
-
-        @Override
-        protected String doInBackground(String... args) {
-            try {
-                return process();
-            } catch (Exception e) {
-                this.e = e;    // Store error
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String data) {
-            super.onPostExecute(data);
-            // Display based on error existence
-
-            if (e != null) {
-                mEditText.setText("Error: " + e.getMessage());
-                this.e = null;
-            } else {
-                Gson gson = new Gson();
-                OCR r = gson.fromJson(data, OCR.class);
-
-                float f_Type = 0;
-                String result = "";
-                ArrayList<Float> listofAmount = new ArrayList<Float>();
-                float tempSum = 0f;
-
-                for (Region reg : r.regions) {
-                    for (Line line : reg.lines) {
-                        result = "";
-                        for (Word word : line.words) {
-                            result += word.text + " ";
-                        }
-                        try {
-                            f_Type = Float.valueOf(result.trim()).floatValue();
-                            if (f_Type != Math.ceil(f_Type)) { // amount
-                                listofAmount.add(f_Type);
-                                tempSum += f_Type;
-                                //System.out.println("float f = " + f_Type);
-                            }
-                        } catch (NumberFormatException nfe) {
-                            //mEditText.setText("1\n");
-                        }
-                    }
-                }
-                Collections.sort(listofAmount);
-                float max = listofAmount.get(listofAmount.size()-1).floatValue();
-                listofAmount.remove(listofAmount.size()-1);
-                if(listofAmount.get(listofAmount.size()-1).floatValue() == max) {
-                    listofAmount.remove(listofAmount.size() - 1);
-                }
-                /*
-                Iterator itr = listofAmount.iterator();
-                while (itr.hasNext()){
-                    float x = (float) itr.next();
-                    if (x == max)
-                        listofAmount.remove(x);
-                }
-                */
-                double minBound, maxBound;
-
-                boolean isTotal = true;
-                if (tempSum != max){
-                    minBound = (tempSum / 3) - ((tempSum / 3) * 0.20);
-                    maxBound = (tempSum / 3) + ((tempSum / 3) * 0.20);
-                    System.out.println(tempSum + " 1) minBound = " + minBound + " maxBound = " + maxBound);
-                    if (minBound > max || maxBound < max){
-                        isTotal = false;
-                        minBound = (tempSum / 2) - ((tempSum / 2) * 0.20);
-                        maxBound = (tempSum / 2) + ((tempSum / 2) * 0.20);
-                        System.out.println(tempSum + " 2) minBound = " + minBound + " maxBound = " + maxBound);
-                        if (minBound <= max && maxBound >= max){
-                            isTotal = true;
-                        }
-                    }
-                }
-
-                if (isTotal){
-                    System.out.println("Successfully found Total amount = " + max);
-                }else{
-                    System.out.println("Failed to find total amount = " + max);
-                }
-
-                mEditText.setText(String.valueOf(max));
-            }
-            access_camera.setEnabled(true);
-        }
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
