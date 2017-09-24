@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.dutchpay.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="700px"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal"
-        android:layout_toStartOf="@+id/editText"
-        android:layout_marginBottom="110dp"
-        android:layout_alignBottom="@+id/balance"
-        android:layout_toLeftOf="@+id/editText"
-        android:layout_marginRight="22dp"
-        android:onClick="takePhoto"
-        android:layout_marginEnd="22dp" />
-
     <Button
         android:id="@+id/add_balance"
         android:layout_width="wrap_content"
@@ -42,7 +25,7 @@
         android:layout_toStartOf="@+id/add_balance"
         android:backgroundTint="@color/colorPrimary"
         android:elevation="0dp"
-
+        android:onClick="takePhoto"
         android:text="Take Photo"
         android:textAlignment="center"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />

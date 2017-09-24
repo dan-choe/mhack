@@ -118,21 +118,21 @@ public class SelectImageActivity extends ActionBarActivity {
     public void takePhoto(View view) {
         System.out.println("===================> SelectImageActivity. takePhoto()");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) != null) {
-            // Save the photo taken to a temporary file.
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            try {
-                mFilePhotoTaken = File.createTempFile(
-                        "IMG_",  /* prefix */
-                        ".jpg",         /* suffix */
-                        storageDir      /* directory */
-                );
+                    if(intent.resolveActivity(getPackageManager()) != null) {
+                        // Save the photo taken to a temporary file.
+                        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                        try {
+                            mFilePhotoTaken = File.createTempFile(
+                                    "IMG_",  /* prefix */
+                                    ".jpg",         /* suffix */
+                                    storageDir      /* directory */
+                            );
 
-                // Create the File where the photo should go
-                // Continue only if the File was successfully created
-                if (mFilePhotoTaken != null) {
-                    mUriPhotoTaken = FileProvider.getUriForFile(this,
-                            "com.example.android.dutchpay.fileprovider",
+                            // Create the File where the photo should go
+                            // Continue only if the File was successfully created
+                            if (mFilePhotoTaken != null) {
+                                mUriPhotoTaken = FileProvider.getUriForFile(this,
+                                        "com.example.android.dutchpay.fileprovider",
                             mFilePhotoTaken);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPhotoTaken);
 

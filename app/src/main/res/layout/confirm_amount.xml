@@ -48,12 +48,12 @@
         android:textSize="24sp"
         android:layout_marginLeft="28dp"
         android:layout_marginStart="28dp"
+        android:maxLines="1"
+        android:inputType="text"
         android:layout_alignBaseline="@+id/dsign"
         android:layout_alignBottom="@+id/dsign"
-        android:layout_toEndOf="@+id/dsign"
         android:layout_toRightOf="@+id/dsign"
-        android:maxLines="1"
-        android:inputType="text"/>
+        android:layout_toEndOf="@+id/dsign" />
 
     <Button
         android:id="@+id/ok_btn"
