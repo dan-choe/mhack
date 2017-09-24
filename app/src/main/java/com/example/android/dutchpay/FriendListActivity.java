@@ -37,9 +37,10 @@ public class FriendListActivity extends AppCompatActivity {
         mDataReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
         nFriendAdapter = new FriendRecycleAdapter(nFriends);
-//        mRecyclerView = (RecyclerView) findViewById(R.id.friendrecyclerView);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView = (RecyclerView) findViewById(R.id.friendrecyclerView);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(nFriendAdapter);
 
