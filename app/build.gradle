@@ -32,10 +32,8 @@ dependencies {
     compile 'com.google.firebase:firebase-auth:11.4.0'
     compile 'com.microsoft.projectoxford:vision:1.0.393'
     compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.github.bumptech.glide:glide:4.1.1'
     compile 'com.android.support:support-v4:25.3.1'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 }
 
 
