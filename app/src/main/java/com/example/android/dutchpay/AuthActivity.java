@@ -102,7 +102,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                             currentUser.child("email").setValue(emailAddress);
                             currentUser.child("password").setValue(emailPassword);
                             currentUser.child("uid").setValue(userId);
-                            List<String> friendList = new ArrayList<String>();
+                            List<String> friendList = new ArrayList<>();
+                            friendList.add(emailAddress);
                             currentUser.child("friendList").setValue(friendList);
                             currentUser.child("balance").setValue(0);
                             currentUser.child("change").setValue(0);

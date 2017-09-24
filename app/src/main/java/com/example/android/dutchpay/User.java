@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @IgnoreExtraProperties
@@ -19,6 +20,7 @@ public class User {
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
+        friendList = new ArrayList<>();
     }
 
     public double getChange() {

@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void processRequest(@NonNull User u) {
-        if (u.getChange() == 0 || u.getChangeBy() == "")
+        if (u == null || u.getChange() == 0 || u.getChangeBy() == "")
             return;
 
         double amount = u.getChange();
