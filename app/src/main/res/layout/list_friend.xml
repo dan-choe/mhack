@@ -30,7 +30,7 @@
 
         <Button
             android:id="@+id/confirm_friends"
-            android:layout_width="50dp"
+            android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:layout_weight="0.70"
             android:text="send" />

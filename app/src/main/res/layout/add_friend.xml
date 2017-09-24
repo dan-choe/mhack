@@ -13,7 +13,8 @@
         android:layout_marginTop="96dp"
         android:ems="10"
         android:hint="Enter Email Address"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/search_friend"
@@ -23,7 +24,11 @@
         android:layout_marginRight="25dp"
         android:layout_marginTop="23dp"
         android:text="Add"
+        android:background="@drawable/buttonshape"
+        android:backgroundTint="#E8F5E9"
+        android:shadowColor="#A8A8A8"
         android:layout_below="@+id/friend_email"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        />
 </RelativeLayout>

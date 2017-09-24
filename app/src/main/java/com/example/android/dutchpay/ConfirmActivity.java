@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
@@ -46,6 +47,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mTotalText;
     protected Uri mImg;
     Uri imageUri;
+    private EditText mTxtDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +56,16 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         if (client == null)
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
 
-        imageUri = getIntent().getData();
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-        } catch (IOException i) {
+        try{
+            mImg = getIntent().getData();
+            bitmap = BitmapFactory.decodeStream(this.openFileInput("receiptImage"));
+            receipt_image = (ImageView) findViewById(R.id.receipt_image);
+            receipt_image.setImageBitmap(bitmap);
+
+            if (bitmap != null)
+                doRecognize();
+        }catch (FileNotFoundException e) {
         }
-
-        receipt_image = (ImageView) findViewById(R.id.receipt_image);
-        receipt_image.setImageBitmap(bitmap);
-
-        if (bitmap != null)
-            doRecognize();
-
         mTotalText = (EditText) findViewById(R.id.total);
         cancel_button = (Button)findViewById(R.id.cancel_button);
         cancel_button.setOnClickListener(this);
@@ -78,8 +78,14 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         if (v == check_button) {
+            if (!mTotalText.getText().toString().equals("") && Double.parseDouble(mTotalText.getText().toString()) > 0) {
+                TOTAL_AMOUNT = Double.parseDouble(mTotalText.getText().toString());
+            }
+            else {
+                toastMessage("Please check your request");
+                return;
+            }
             startActivity(new Intent(getApplicationContext(), FriendListActivity.class));
-            TOTAL_AMOUNT = Double.parseDouble(mTotalText.getText().toString());
         }
     }
 
@@ -188,7 +194,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 if (isTotal) {
-                    System.out.println("Successfully found Total amount = " + max+"\n\n");
+                    toastMessage("Successfully found Total amount = " + max+"\n\n");
                 } else {
                     System.out.println("Failed to find total amount = " + max+"\n\n");
                 }
@@ -200,5 +206,9 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     }
     public static double get_TOTAL_AMOUNT() {
         return TOTAL_AMOUNT;
+    }
+    // helper function to toast a message
+    public void toastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
