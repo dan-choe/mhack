@@ -27,6 +27,7 @@ public class FriendListActivity extends AppCompatActivity {
     private DatabaseReference mDataReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,12 @@ public class FriendListActivity extends AppCompatActivity {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         mDataReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
+
+
         nFriendAdapter = new FriendRecycleAdapter(nFriends);
 //        mRecyclerView = (RecyclerView) findViewById(R.id.friendrecyclerView);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(nFriendAdapter);
