@@ -2,6 +2,7 @@ package com.example.android.dutchpay;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -32,37 +33,42 @@ public class FriendListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        mDataReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        nFriendAdapter = new FriendRecycleAdapter(nFriends);
         mRecyclerView = (RecyclerView) findViewById(R.id.friendrecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(nFriendAdapter);
 
-        // get nFriends here
-        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        mDataReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mFirebaseUser.getUid());
+        prepareNfriendsData();
+    }
 
-        ValueEventListener postListener = new ValueEventListener() {
+    private void prepareNfriendsData() {
+
+        mDataReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User u = dataSnapshot.getValue(User.class);
-                for (String e : u.getFriendList()) {
-                    User temp = new User();
-                    temp.setEmail(e);
-                    nFriends.add(temp);
+
+                String myUid = mFirebaseUser.getUid();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user.getUid().equals(myUid)) {
+                        for (String e : user.getFriendList()) {
+                            User temp = new User();
+                            temp.setEmail(e);
+                            nFriends.add(temp);
+                        }
+                    }
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                toastMessage("You have not added anyone in your friend's list or Error Occurred");
             }
-        };
-
-        nFriendAdapter = new FriendRecycleAdapter(nFriends);
-        mRecyclerView.setAdapter(nFriendAdapter);
+        });
     }
 
-    // helper function to toast a message
-    public void toastMessage(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
 }
 

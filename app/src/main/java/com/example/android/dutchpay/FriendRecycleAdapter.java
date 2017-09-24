@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-
+import android.widget.TextView;
 
 
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +52,6 @@ public class FriendRecycleAdapter extends RecyclerView.Adapter<FriendRecycleAdap
                 checkedFriends.add(newU.getUid());
             }
         });
-
     }
 
 
@@ -64,13 +63,13 @@ public class FriendRecycleAdapter extends RecyclerView.Adapter<FriendRecycleAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
-        public EditText email;
+        public TextView email;
         public Button addB;
 
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
-            email = (EditText) itemView.findViewById(R.id.row_email);
+            email = (TextView) itemView.findViewById(R.id.row_email);
             addB = (Button) itemView.findViewById(R.id.row_add);
         }
     }
