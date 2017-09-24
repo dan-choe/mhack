@@ -38,7 +38,8 @@
         android:layout_marginTop="24dp"
 
         android:inputType="textPassword"
-        android:text="" />
+        android:text=""
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -64,7 +65,9 @@
         android:layout_marginTop="125dp"
         android:layout_toRightOf="@+id/textView1"
         android:text=""
-        tools:ignore="RtlHardcoded,TextFields" />
+        tools:ignore="RtlHardcoded,TextFields"
+        android:inputType="text"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/logButton"

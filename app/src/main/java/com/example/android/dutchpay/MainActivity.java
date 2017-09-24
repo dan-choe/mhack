@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDatabaseUserRef.child("change").setValue(0);
         mDatabaseUserRef.child("changeBy").setValue("");
         mDatabaseUserRef.child("balance").setValue(u.getBalance());
+        toastMessage("Your Balance is updated!");
     }
 
     public void requestBalance(double amount) {
@@ -270,26 +271,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TAKE_PHOTO) {
-            //if(resultCode == RESULT_OK) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-            String fileName = createImageFromBitmap(imageBitmap);
-            Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-            intent.setData(Uri.fromFile(mFilePhotoTaken));
-            startActivity(intent);
-            // }
-        }
-        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
-            //if(resultCode == RESULT_OK) {
-            Uri imageUri = data.getData();
-            try {
-                Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            if(resultCode == RESULT_OK) {
+                Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 String fileName = createImageFromBitmap(imageBitmap);
                 Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                intent.setData(imageUri);
+                intent.setData(Uri.fromFile(mFilePhotoTaken));
                 startActivity(intent);
-            } catch (IOException e) {
             }
-            // }
+        }
+        else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
+            if(resultCode == RESULT_OK) {
+                Uri imageUri = data.getData();
+                try {
+                    Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    String fileName = createImageFromBitmap(imageBitmap);
+                    Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                    intent.setData(imageUri);
+                    startActivity(intent);
+                } catch (IOException e) {
+                }
+            }
         }
     }
 

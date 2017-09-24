@@ -1,11 +1,13 @@
 package com.example.android.dutchpay;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,6 +60,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean flag = false;
                 String myUid = null, friendUid = null;
                 List<String> myFL = new ArrayList<>();
                 List<String> friendFL = new ArrayList<>();
@@ -66,6 +69,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
                     if (user.getEmail().equals(friendEmail)) {
                         friendUid = user.getUid();
                         friendFL = user.getFriendList();
+                        flag = true;
                     }
                     if (user.getEmail().equals(myEmail)) {
                         myUid = user.getUid();
@@ -82,11 +86,21 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
                 userUpdates.put(friendUid + "/friendList", friendFL);
                 userUpdates.put(myUid + "/friendList", myFL);
                 mDatabaseRef.updateChildren(userUpdates);
+
+                if (flag) {
+                    toastMessage("You and your friend are now connected!");
+                } else {
+                    toastMessage("You fail to find someone or fail to connect");
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+    }
+
+    public void toastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

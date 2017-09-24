@@ -13,7 +13,8 @@
         android:inputType="numberDecimal"
         android:textAlignment="center"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/addBalance_yes"

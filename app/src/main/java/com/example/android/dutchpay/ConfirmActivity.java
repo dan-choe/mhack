@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
@@ -42,7 +43,9 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected Bitmap bitmap;
     private VisionServiceClient client;
     private EditText mTotalText;
+    private EditText mTxtDialog;
     protected Uri mImg;
+    private static double Total_Amount = 0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         cancel_button.setOnClickListener(this);
         check_button = (Button)findViewById(R.id.check_button);
         check_button.setOnClickListener(this);
+
+        mTxtDialog = (EditText) findViewById(R.id.txtDialog);
     }
 
     public void onClick(View v) {
@@ -73,7 +78,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         if (v == check_button) {
-
+            startActivity(new Intent(getApplicationContext(), FriendListActivity.class));
         }
     }
 
@@ -86,6 +91,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     }
     private String process() throws VisionServiceException, IOException {
         Gson gson = new Gson();
+
+        mTxtDialog.setText("Analyzing...");
 
         // Put the image into an input stream for detection.
         Bitmap bitMap = BitmapFactory.decodeFile(mImg.getPath());
@@ -182,13 +189,25 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 if (isTotal) {
+                    toastMessage("Successfully found Total amount = " + max+"\n\n");
                     System.out.println("Successfully found Total amount = " + max+"\n\n");
                 } else {
                     System.out.println("Failed to find total amount = " + max+"\n\n");
                 }
 
+                mTxtDialog.setText("");
                 mTotalText.setText(String.valueOf(max));
+
+                Total_Amount = max;
             }
         }
+    }
+
+    public void toastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public  static double get_Total_Max() {
+        return Total_Amount;
     }
 }

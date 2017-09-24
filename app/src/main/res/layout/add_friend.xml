@@ -13,7 +13,8 @@
         android:layout_marginTop="96dp"
         android:ems="10"
         android:hint="Enter Email Address"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:maxLines="1"/>
 
     <Button
         android:id="@+id/search_friend"
