@@ -39,6 +39,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected Bitmap bitmap;
     private VisionServiceClient client;
     private EditText mTotalText;
+    protected Uri mImg;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +49,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
 
         try {
+            mImg = getIntent().getData();
             bitmap = BitmapFactory.decodeStream(this.openFileInput("receiptImage"));
             receipt_image = (ImageView) findViewById(R.id.receipt_image);
             receipt_image.setImageBitmap(bitmap);
@@ -85,8 +87,14 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Gson gson = new Gson();
 
         // Put the image into an input stream for detection.
+        Bitmap bitMap = BitmapFactory.decodeFile(mImg.getPath());
+
+        if (bitMap == null){
+            bitMap = bitmap;
+        }
+
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+        bitMap.compress(Bitmap.CompressFormat.JPEG, 100, output);
         ByteArrayInputStream inputStream = new ByteArrayInputStream(output.toByteArray());
 
         OCR ocr;
