@@ -270,13 +270,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TAKE_PHOTO) {
-            //if(resultCode == RESULT_OK) {
-            Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-            String fileName = createImageFromBitmap(imageBitmap);
-            Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-            intent.setData(Uri.fromFile(mFilePhotoTaken));
-            startActivity(intent);
-            // }
+            if (resultCode == RESULT_OK) {
+                //Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
+                //String fileName = createImageFromBitmap(imageBitmap);
+                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
+                intent.setData(mUriPhotoTaken);
+                startActivity(intent);
+            }
         }
         else if(requestCode == CHOOSE_GALLERY && data != null && data.getData() != null) {
             //if(resultCode == RESULT_OK) {

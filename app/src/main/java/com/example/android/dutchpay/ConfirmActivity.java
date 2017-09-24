@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +44,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     private VisionServiceClient client;
     private EditText mTotalText;
     protected Uri mImg;
+    Uri imageUri;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +53,18 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         if (client == null)
             client = new VisionServiceRestClient(getString(R.string.subscription_key));
 
-        try{
-            mImg = getIntent().getData();
-            bitmap = BitmapFactory.decodeStream(this.openFileInput("receiptImage"));
-            receipt_image = (ImageView) findViewById(R.id.receipt_image);
-            receipt_image.setImageBitmap(bitmap);
-
-            if (bitmap != null)
-                doRecognize();
-        }catch (FileNotFoundException e) {
+        imageUri = getIntent().getData();
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+        } catch (IOException i) {
         }
+
+        receipt_image = (ImageView) findViewById(R.id.receipt_image);
+        receipt_image.setImageBitmap(bitmap);
+
+        if (bitmap != null)
+            doRecognize();
+
         mTotalText = (EditText) findViewById(R.id.total);
         cancel_button = (Button)findViewById(R.id.cancel_button);
         cancel_button.setOnClickListener(this);
@@ -73,7 +77,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
         if (v == check_button) {
-
+            startActivity(new Intent(getApplicationContext(), FriendListActivity.class));
         }
     }
 
