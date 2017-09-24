@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,8 +31,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -43,14 +52,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
     private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseUserRef;
     private ProgressDialog mProgressDialog;
 
     private Button add_balance;
     private Button access_camera;
     private Button access_gallery;
+    private TextView t;
 
     private static final int TAKE_PHOTO = 1;
     private static final int CHOOSE_GALLERY = 2;
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        mDatabaseUserRef = mDatabaseRef.child(mFirebaseUser.getUid());
         mProgressDialog = new ProgressDialog(this);
 
         add_balance = (Button)findViewById(R.id.add_balance);
@@ -68,6 +82,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         access_camera.setOnClickListener(this);
         access_gallery = (Button)findViewById(R.id.access_gallery);
         access_gallery.setOnClickListener(this);
+        t = (TextView)findViewById(R.id.balance);
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                User u = dataSnapshot.getValue(User.class);
+                processRequest(u);
+
+                DecimalFormat df = new DecimalFormat("#.00");
+                df.setRoundingMode(RoundingMode.CEILING);
+                t.setText(df.format(u.getBalance()));
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mDatabaseUserRef.addValueEventListener(postListener);
+
 
         // set the title as the user email
         if (mFirebaseUser != null) {
@@ -75,6 +111,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         else {
             startActivity(new Intent(this, LogInActivity.class));
+        }
+
+        // for added balance
+        if (getIntent().hasExtra("add_balance")) {
+            requestBalance(getIntent().getExtras().getDouble("add_balance"));
         }
     }
 
@@ -91,35 +132,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void addBalance(final int addAmount) {
+    public void processRequest(@NonNull User u) {
+        if (u.getChange() == 0 || u.getChangeBy() == "")
+            return;
 
-        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        double amount = u.getChange();
+        String by = u.getChangeBy();
 
-                String me = mFirebaseUser.getUid();
-                Map<String, Object> childUpdates = new HashMap<>();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user.uid.equals(me)) {
-                        childUpdates.put("/" + me + "/balance/", user.balance + addAmount);
-                    }
-                }
-                mDatabaseRef.updateChildren(childUpdates);
+        double balance = u.getBalance();
+        if (balance + amount >= 0) {
+            u.setBalance(balance + amount);
+            if(amount < 0) {
+                singlePayment(by, 0 - amount);
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("ADD_BALANCE", "Adding to balance failed");
-            }
-        });
+        }
+        mDatabaseUserRef.child("change").setValue(0);
+        mDatabaseUserRef.child("balance").setValue(u.getBalance());
     }
 
-    public void requestPayment() {
-
+    public void requestBalance(double amount) {
+        mDatabaseUserRef.child("change").setValue(amount);
+        mDatabaseUserRef.child("changeBy").setValue(mFirebaseUser.getUid());
     }
 
-    private void payTheRequest(final String friend, final int amount) {
+    public void requestPayment(List friends, double original_amount) {
+        int length = friends.size();
+        double amount = original_amount / (double) length;
+        DecimalFormat df = new DecimalFormat("#.00");
+        df.setRoundingMode(RoundingMode.CEILING);
+        amount = Double.parseDouble(df.format(amount));
+
+        for(int i = 0; i < length; i++) {
+            singleRequest(friends.get(i).toString(), amount);
+        }
+    }
+
+    public void singleRequest(String friend, double amount) {
+        JSONObject change = new JSONObject();
+        try {
+            change.put("amount", 0 - amount);
+            change.put("by", mFirebaseUser.getUid());
+        }
+        catch (JSONException e) {}
+        mDatabaseRef.child(friend).child("change").setValue(change);
+    }
+
+    public void singlePayment(String friend, double amount) {
+        JSONObject change = new JSONObject();
+        try {
+            change.put("amount", 0 - amount);
+            change.put("by", mFirebaseUser.getUid());
+        }
+        catch (JSONException e) {}
+        mDatabaseRef.child(friend).child("change").setValue(change);
+    }
+
+    /*private void payTheRequest(final String friend, final double amount) {
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -175,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-    }
+    }*/
 
 
 
@@ -206,8 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void addBalance() {
-        //Intent addBalance = new Intent(getApplicationContext(), BalanceActivity.class);
-        //startActivity(BalanceActivity);
+        startActivity(new Intent(getApplicationContext(), BalanceRequestActivity.class));
     }
     public void accessCamera() {
         dispatchTakePictureIntent();
@@ -229,10 +296,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TAKE_PHOTO) {
             if(resultCode == RESULT_OK) {
-                /*Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
-                Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);
-                intent.putExtra("BitmapImage", imageBitmap);
-                startActivity(intent);*/
                 Bitmap imageBitmap = (Bitmap) data.getExtras().get("data");
                 String fileName = createImageFromBitmap(imageBitmap);
                 Intent intent = new Intent(getApplicationContext(), ConfirmActivity.class);

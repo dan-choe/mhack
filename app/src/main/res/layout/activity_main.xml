@@ -20,30 +20,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Take Photo"
-        android:layout_marginBottom="88dp"
+        android:layout_marginBottom="85dp"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/add_balance"
-        android:layout_toStartOf="@+id/add_balance" />
+        android:layout_toLeftOf="@+id/balance"
+        android:layout_toStartOf="@+id/balance" />
 
     <Button
         android:id="@+id/access_gallery"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Choose from Gallery"
-        android:layout_alignBaseline="@+id/access_camera"
-        android:layout_alignBottom="@+id/access_camera"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_below="@+id/add_balance"
         android:layout_toRightOf="@+id/access_camera"
-        android:layout_toEndOf="@+id/access_camera"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp" />
+        android:layout_toEndOf="@+id/access_camera" />
 
-    <EditText
+    <TextView
         android:id="@+id/balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/add_balance"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:text="$0"
-        android:textSize="40sp" />
+        android:layout_marginBottom="68dp"
+        android:text="0.00"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/balance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:text="BALANCE"
+        android:layout_above="@+id/balance"
+        android:layout_alignLeft="@+id/access_gallery"
+        android:layout_alignStart="@+id/access_gallery" />
+
+    <TextView
+        android:id="@+id/dollar_sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$"
+        android:layout_alignTop="@+id/balance"
+        android:layout_alignLeft="@+id/add_balance"
+        android:layout_alignStart="@+id/add_balance" />
 </RelativeLayout>

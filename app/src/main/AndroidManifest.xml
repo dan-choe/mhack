@@ -32,6 +32,10 @@
 
         </activity>
 
+        <activity android:name=".BalanceRequestActivity">
+
+        </activity>
+
     </application>
 
 </manifest>
