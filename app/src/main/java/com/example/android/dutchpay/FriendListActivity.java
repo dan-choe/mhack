@@ -68,7 +68,8 @@ public class FriendListActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
 
+        nFriendAdapter.notifyDataSetChanged();
+    }
 }
 
