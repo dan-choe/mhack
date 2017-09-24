@@ -69,12 +69,11 @@
             android:layout_weight="1.5"
             android:orientation="horizontal">
 
-            <Button
+            <Switch
                 android:id="@+id/row_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:text="ADD" />
+                android:layout_gravity="center_vertical|center_horizontal" />
 
         </LinearLayout>
 
